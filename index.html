@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta charset="utf-8"/>
+ 
+<meta http-equiv="X-UA-Compatible" content=="IE=edge"/>
+<meta name="google" value="notranslate"/>
+
+<link rel="stylesheet" type="text/css" href="../git2/css/index2.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+	<style>
+
+		#timeToRender {
+		position:absolute; 
+		top: 80px; 
+		font-size: 20px; 
+		font-weight: bold; 
+		background-color: #d85757;
+		padding: 0px 4px;
+		color: #ffffff;
+	}
+* {
+  box-sizing: border-box;
+}
+
+/* Create two unequal columns that floats next to each other */
+.column {
+  float: left;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+.left {
+  width: 5%;
+}
+
+.right {
+  width: 20%;
+  
+}
+.center{
+width:75%;
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+</head>
+<body>
+
+
+<div class="row">
+  <div class="column left">
+   
+  </div>
+  <div class="column center" >
+    <div id="map" style="height:400px "class="map">
+</div>
+	    <form class="form-inline">
+      <label>Geometry type &nbsp;</label>
+      <select id="type">
+	  <option value="None">None</option>
+  <!--      <option value="Point">Point</option>
+        <option value="LineString">LineString</option>
+		<option value="Circle">Circle</option>
+		-->
+        <option value="Polygon">Polygon</option>
+		  <option value="Submit">Submit</option>
+        
+        
+      </select>
+    </form>
+	<div id="mouse-position"></div>
+	 <div id="info">
+        <em>Click on the map to get feature info</em>
+    </div>
+	<input type="button" value="Reload Page" onClick="window.location.reload();">
+	
+	<div id="chartContainer" style="height: 200px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	<!--<button type="submit"  value="Submit" onclick="callWcs()">Submit</button>-->
+  </div>
+  <div class="column right">
+  Lat Long Info<br>
+   Left Upper Corner:<br>
+   Right Corner:<br>
+   <br>
+Red Band<br>
+<p id="r_mean"></p>
+Mean:<br>
+<p id="r_max"></p>
+Max:<br>
+<p id="r_min"></p>
+Min:<br>
+<br>
+Blue Band:<br>
+<p id="b_mean"></p>
+Mean:<br>
+<p id="b_max"></p>
+Max:<br>
+<p id="b_min"></p>
+Min:<br>
+<br>
+Green Band:<br>
+Mean:<br>
+Max:<br>
+Min:<br>
+
+
+  </div>
+  
+</div>
+
+
+
+    
+
+    
+	<nav class="main-menu">
+
+
+  
+ <div>
+    <a class="logo" href="http://startific.com">
+	
+    </a> 
+  </div> 
+<div class="settings"></div>
+
+<div class="scrollbar" id="style-1">
+      
+<ul>
+  
+<li>                                   
+<a href="http://startific.com">
+<i class="fa fa-home fa-lg"></i>
+<span class="nav-text">Home</span>
+</a>
+</li>   
+   
+ 
+
+    
+<li>                                 
+<a href="http://startific.com">
+<i class="fa fa-envelope-o fa-lg"></i>
+<span class="nav-text">Contact</span>
+</a>
+</li>   
+  
+
+
+ 
+<li>
+<a href="http://startific.com">
+<i class="fa fa-heart-o fa-lg"></i>
+                        
+<span class="share"> 
+
+
+<div class="addthis_default_style addthis_32x32_style">
+  
+<div style="position:absolute;
+margin-left: 56px;top:3px;"> 
+   
+  
+
+  
+ <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank" class="share-popup"><img src="http://icons.iconarchive.com/icons/danleech/simple/512/facebook-icon.png" width="30px" height="30px"></a>
+
+   <a href="https://twitter.com/share" target="_blank" class="share-popup"><img src="https://cdn1.iconfinder.com/data/icons/metro-ui-dock-icon-set--icons-by-dakirby/512/Twitter_alt.png" width="30px" height="30px"></a>
+
+   
+
+
+ 
+  
+  
+  
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4ff17589278d8b3a"></script>
+                       
+                            
+                              
+                            
+                          
+                        </span>
+                        <span class="twitter"></span>
+                        
+                    <!--    <span class="fb-like">  
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffacebook.com%2Fstartific&amp;width&amp;layout=button&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:35px;" allowTransparency="true"></iframe>
+                       
+                        </span>-->
+                        <span class="nav-text">
+                        </span>
+                        
+                    </a>
+
+</li>
+                            
+
+  
+  
+</li>
+<li class="darkerlishadow">
+<a href="http://startific.com">
+<i class="fa fa-clock-o fa-lg"></i>
+<span class="nav-text">News</span>
+</a>
+</li>
+  
+<li class="darkerli">
+<a href="http://startific.com">
+<i class="fa fa-desktop fa-lg"></i>
+<span class="nav-text">Technology</span>
+</a>
+</li>
+  
+
+ 
+<li>
+                                   
+<a href="http://startific.com">
+<i class="fa fa-question-circle fa-lg"></i>
+<span class="nav-text">Help</span>
+</a>
+</li>   
+       </nav>
+  
+<script>
+ </script>
+	   <script src="../git2/js/loading_functions.js"></script>
+</body>
+</html>
